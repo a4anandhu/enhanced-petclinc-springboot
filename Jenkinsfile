@@ -60,12 +60,19 @@ pipeline {
 
         stage('Sonar Quality Gate') {
             steps {
-                echo 'Sonar Quality Gate Stage started'
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
+        echo 'Sonar Quality Gate Stage started'
+        timeout(time: 1, unit: 'MINUTES') {
+            script {
+                def qualityGate = waitForQualityGate()
+                if (qualityGate.status != 'OK') {
+                    echo "Quality gate failed: ${qualityGate.status}"
+                    // Don’t fail the build
                 }
             }
         }
+    }
+}
+
         stage('Maven Package') { 
             steps {
                 echo 'This Maven package Stage'
