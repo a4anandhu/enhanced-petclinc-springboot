@@ -12,19 +12,19 @@ pipeline {
             }
         }
 
-        stage('Maven Compile') {
-            steps {
-                echo 'This Maven Compile Stage'
-                sh 'mvn compile'
-            }
-        }
+        // stage('Maven Compile') {
+        //     steps {
+        //         echo 'This Maven Compile Stage'
+        //         sh 'mvn compile'
+        //     }
+        // }
 
-        stage('Maven Test') { 
-            steps {
-                echo 'This Maven Test Stage'
-                sh 'mvn test'
-            }
-        }
+        // stage('Maven Test') { 
+        //     steps {
+        //         echo 'This Maven Test Stage'
+        //         sh 'mvn test'
+        //     }
+        // }
 
         stage('Trivy Scan - File System') {
         steps {
@@ -64,6 +64,12 @@ pipeline {
                 timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
                 }
+            }
+        }
+        stage('Maven Package') { 
+            steps {
+                echo 'This Maven package Stage'
+                sh 'mvn packgage'
             }
         }
     }
